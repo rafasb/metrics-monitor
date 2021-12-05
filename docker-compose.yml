@@ -1,0 +1,93 @@
+version: '3.9'
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    ports:
+    - 3000:3000
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource,grafana-piechart-panel,marcusolsson-gantt-panel,grafana-worldmap-panel,briangann-gauge-panel,natel-plotly-panel
+      - HTTP_USER=${HTTP_GRAFANA_USER}
+      - HTTP_PASS=${HTTP_GRAFANA_PASS}
+      # - INFLUXDB_HOST=influxdb
+      # - INFLUXDB_PORT=8086
+      # - INFLUXDB_NAME="grafanadb"
+      # - INFLUXDB_USER="grafanadbuser"
+      # - INFLUXDB_PASS="grafanadbpass"
+    volumes:
+    # - ./datos/grafana/provisioning:/etc/grafana/provisioning
+    - ./datos/grafana/config/config.ini:/etc/grafana/config.ini
+    # - ./datos/grafana/dashboards:/var/lib/grafana/dashboards
+    # - /datos/grafana/certs:/certs
+    # Data persistency
+    # sudo mkdir -p ./datos/grafana/data; chown -R 472:472 ./datos/grafana/data
+    - ./datos/grafana/data:/var/lib/grafana
+    - ./certs/ca-certificates.crt:/etc/ssl/certs/ca-certificates.crt:ro
+    depends_on:
+      # - prometheus
+      - influxdb
+  
+  influxdb:
+    image: docker.io/influxdb:latest
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./datos/influxdb/data:/var/lib/influxdb2:rw
+      - ./datos/influxdb/config:/etc/influxdb2
+      - ./certs/${INFLUXDBHOST}.crt:/etc/ssl/influxdb-selfsigned.crt:ro
+      - ./certs/${INFLUXDBHOST}.key:/etc/ssl/influxdb-selfsigned.key:ro
+    env_file:
+      - './datos/influxdb/env.influxdb' 
+
+  telegraf:
+    image: telegraf:latest
+    container_name: telegraf
+    volumes:
+      - ./datos/telegraf/config/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - ./certs/ca-root.pem:/etc/telegraf/ca.pem:ro
+    links:
+      - influxdb
+    depends_on:
+      - influxdb
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+    - 9090:9090
+    command:
+    - '--config.file=/etc/prometheus/prometheus.yml'
+    - '--storage.tsdb.path=/prometheus/' 
+    - '--storage.tsdb.retention.time=15d'
+    volumes:
+    - ./datos/prometheus/config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    - ./datos/prometheus/config/alerts.yml:/etc/prometheus/alerts.yml:ro
+    - prometheus:/prometheus
+
+## SERVICIO: Recoge datos de recursos del host empleados por contenedores.
+  cadvisor:
+    image: gcr.io/google-containers/cadvisor:latest
+    container_name: cadvisor
+    ports:
+    - 8080:8080
+    volumes:
+    - /:/rootfs:ro
+    - /var/run:/var/run:rw
+    - /sys:/sys:ro
+    - /var/lib/docker/:/var/lib/docker:ro
+    command: --storage_driver="redis" --storage_duration=5m0s --storage_driver_host=${REDISHOST}:6379
+    privileged: true
+    depends_on:
+    - redis
+    links:
+    - redis
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+    - 6379:6379
+
+volumes:
+  prometheus:

@@ -1,0 +1,4 @@
+!*README.md
+certs/*
+datos/grafana/data/*
+datos/influxdb/data/*
