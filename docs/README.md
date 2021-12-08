@@ -142,27 +142,44 @@ Accedemos al menú de **Dashboards** en el panel lateral y dentro de este al sub
 
 **Alertas Prometheus**
 docker run --name alertmanager -d -p 9093:9093 quay.io/prometheus/alertmanager
+
 https://github.com/prometheus/alertmanager
+
 https://awesome-prometheus-alerts.grep.to/rules.html
 
 ## Referencias
 
 **Importantes**
+
 https://prometheus.io/docs/guides/node-exporter/
+
 https://github.com/google/cadvisor/blob/master/docs/runtime_options.md
+
 https://prometheus.io/docs/prometheus/latest/configuration/configuration/
+
 https://grafana.com/docs/grafana/latest/installation/docker/?src=grafana_footer
+
 https://hub.docker.com/_/influxdb
 
+
 **Alarmas prometheus**
+
 https://awesome-prometheus-alerts.grep.to/rules.html
 
 **Otras referencias:**
+
 https://logz.io/blog/prometheus-tutorial-docker-monitoring/#whatisprometheus
+
 https://grafana.com/docs/grafana/latest/installation/docker/?src=grafana_footer
+
 https://community.grafana.com/t/grafana-docker-and-data-persistence/33702/2
+
 https://github.com/nicolargo/docker-influxdb-grafana/blob/master/docker-compose.yml
+
 https://medium.com/@mertcan.simsek276/docker-monitoring-with-cadvisor-prometheus-and-grafana-adefe1202bf8
+
 https://hub.docker.com/r/philhawthorne/docker-influxdb-grafana/
+
 https://github.com/blasebast/monitoring-grafana-influxdb-telegraf-prometheus
+
 https://www.jorgedelacruz.es/2020/11/23/en-busca-del-dashboard-perfecto-influxdb-telegraf-y-grafana-parte-i-instalando-influxdb-telegraf-y-grafana-sobre-ubuntu-20-04-lts/
