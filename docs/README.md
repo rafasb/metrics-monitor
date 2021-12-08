@@ -6,7 +6,7 @@ las herramientas empleadas (Prometheus e InfluxDB) permiten recopilar métricas 
 
 ## Flujo de datos
 
-![alt:Esquema_del_Sistema](docs/Esquema_Metrics-Monitor.png)
+![alt:Esquema_del_Sistema](https://github.com/rafasb/metrics-monitor/raw/main/docs/Esquema_Metrics-Monitor.png)
 
 Como vemos en el esquema de este ejemplo, el sistema se puede considerar en tres capas:
 
