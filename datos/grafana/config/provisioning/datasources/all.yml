@@ -2,6 +2,6 @@ datasources:
 - name: 'Prometheus'
   type: 'prometheus'
   access: 'browser'
-  url: 'http://<HOST>:9090'
+  url: 'http://test.santisteban.link:9090'
   is_default: true
   editable: false
